@@ -81,8 +81,6 @@ void setup() {
     Serial.print("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n");
     Serial.print("Client IP: ");
     Serial.println(server.client().remoteIP());
-    //Serial.print("Client Hostname: ");
-    //Serial.println(server.client().hostname());
     server.send(200, "text/html", readFile("/index.html"));
   });
 
