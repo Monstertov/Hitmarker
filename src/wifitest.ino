@@ -15,7 +15,7 @@ const int vibrationThreshold = 200;  // Adjust the threshold as needed
 const unsigned long ledDuration = 1000; // Duration for LED to stay on in milliseconds
 unsigned long previousMillis = 0; // Variable to store the previous time when LED was turned on
 bool ledState = false; // Variable to track the state of the LED
-
+int PDV = 0; // Piezo Detection Value for web
 
 void setup() {
   Serial.begin(115200); // Start serial communication
@@ -95,6 +95,7 @@ void loop() {
   // Log all analog readings above 0
   if (piezoValue > 0) {
     Serial.print("Vibration detected with signal value at: ");
+    PDV = piezoValue; // Update Piezo Detection Value buffer to last known vibration
     Serial.println(piezoValue);
   }
 
