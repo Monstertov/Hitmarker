@@ -6,8 +6,26 @@
     </head>
     <body>
 
-        <h1>Hello world!</h1>
-        <p>Hitmarker project</p>
+        <h1>Piezo Detection Value</h1>
+        <p>PDV: <span id="piezoValue"></span></p>
 
     </body>
+
+    <script>
+        
+        function fetchDataAndUpdate() {
+          
+          fetch('/data')
+            .then(response => response.json()) 
+            .then(data => {
+              
+              document.getElementById('piezoValue').innerText = data.piezoValue;
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        }
+      
+        
+        setInterval(fetchDataAndUpdate, 1000); 
+      </script>
+
 </html>
