@@ -70,7 +70,7 @@ void setup() {
   server.on("/data", HTTP_GET, []() {
     // Create a JSON object with live data
     StaticJsonDocument<64> jsonData;
-    jsonData["piezoValue"] = analogRead(piezoPin);
+    jsonData["piezoValue"] = PDV;
 
     // Serialize JSON to string
     String jsonString;
