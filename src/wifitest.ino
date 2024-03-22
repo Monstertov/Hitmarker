@@ -2,6 +2,7 @@
 #include <WebServer.h>
 #include <ESPmDNS.h>
 #include <SPIFFS.h>
+#include <ArduinoJson.h>
 
 const char *ssid = "Hitmarker";      // WiFi network name
 const char *password = "hitmarker";  // WiFi network password
@@ -63,6 +64,20 @@ void setup() {
     //Serial.print("Client Hostname: ");
     //Serial.println(server.client().hostname());
     server.send(200, "text/html", readFile("/index.html"));
+  });
+
+  // Route for data endpoint
+  server.on("/data", HTTP_GET, []() {
+    // Create a JSON object with live data
+    StaticJsonDocument<64> jsonData;
+    jsonData["piezoValue"] = analogRead(piezoPin);
+
+    // Serialize JSON to string
+    String jsonString;
+    serializeJson(jsonData, jsonString);
+
+    // Send JSON response
+    server.send(200, "application/json", jsonString);
   });
 
   // Start server
