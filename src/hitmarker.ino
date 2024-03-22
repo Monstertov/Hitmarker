@@ -104,6 +104,9 @@ void setup() {
         String command = server.arg("plain");
         Serial.println("Sending command " + command + " to serial port...");
         Serial.println(command);
+        DynamicJsonDocument jsonDocument(256);
+        String cmd = jsonDocument["command"].as<String>();
+        commander(cmd);
         server.send(200, "application/json", "{\"success\": true, \"response\": \"Command sent to serial\"}");
     });
 
@@ -170,8 +173,12 @@ String readFile(const char *filename) {
 void handleSerialCommands() {
   if (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n'); // Read the command until newline character
+    commander(command);
+  }
+}
 
-    if (command.startsWith("restart")) {
+void commander(String command){
+  if (command.startsWith("restart")) {
       Serial.println("Performing full power cycle...");
       powerCycle();
     } else if (command.startsWith("ping")) {
@@ -192,7 +199,6 @@ void handleSerialCommands() {
       Serial.print("Unknown command: ");
       Serial.println(command);
     }
-  }
 }
 
 void updateConfig(String key, String value) {
