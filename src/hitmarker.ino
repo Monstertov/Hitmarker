@@ -11,7 +11,7 @@ WebServer server(80);                // Create a web server on port 80
 
 const int piezoPin = 32;  // Use GPIO pin 32 for the piezo element
 const int ledPin = 14;    // Use GPIO pin 14 for the LED
-const int vibrationThreshold = 200;  // Adjust the threshold as needed
+int vibrationThreshold = 150;  // Adjust the threshold as needed with default value
 const unsigned long ledDuration = 1000; // Duration for LED to stay on in milliseconds
 unsigned long previousMillis = 0; // Variable to store the previous time when LED was turned on
 bool ledState = false; // Variable to track the state of the LED
@@ -22,6 +22,25 @@ void setup() {
   delay(1000); // Allow some time for the Serial monitor to initialize
 
   Serial.println("Booting...");
+
+  // Read the main.vars file
+  File configFile = SPIFFS.open("/main.vars", "r");
+  if (!configFile) {
+    Serial.println("Failed to open main.vars file");
+  } else {
+    // Parse the JSON file
+    DynamicJsonDocument doc(1024);
+    DeserializationError error = deserializeJson(doc, configFile);
+    if (error) {
+      Serial.println("Failed to parse main.vars file");
+    } else {
+      // Read the vibrationThreshold value
+      vibrationThreshold = doc["vibrationThreshold"];
+      Serial.print("Loaded vibrationThreshold from main.vars: ");
+      Serial.println(vibrationThreshold);
+    }
+    configFile.close();
+  }
 
   pinMode(piezoPin, INPUT);  // Set the piezo pin as input
   pinMode(ledPin, OUTPUT);   // Set the LED pin as output
@@ -71,6 +90,7 @@ void setup() {
     // Create a JSON object with live data
     StaticJsonDocument<64> jsonData;
     jsonData["piezoValue"] = PDV;
+    jsonData["vibrationThreshold"] = vibrationThreshold;
 
     // Serialize JSON to string
     String jsonString;
@@ -149,9 +169,44 @@ void handleSerialCommands() {
       powerCycle();
     } else if (command.startsWith("ping")) {
       Serial.println("Pong!");
+    } else if (command.startsWith("threshold")) {
+      // Extract the new threshold value from the command
+      int newThreshold = command.substring(10).toInt(); // Assuming the command format is "threshold <value>"
+      
+      // Update the vibrationThreshold variable
+      vibrationThreshold = newThreshold;
+      
+      // Update the main.vars file
+      updateConfig("vibrationThreshold", String(newThreshold));
+      
+      Serial.print("Updated vibrationThreshold to ");
+      Serial.println(newThreshold);
     } else {
       Serial.print("Unknown command: ");
       Serial.println(command);
     }
   }
+}
+
+void updateConfig(String key, String value) {
+  // Create or open the main.vars file in write mode
+  File configFile = SPIFFS.open("/main.vars", "w");
+  if (!configFile) {
+    Serial.println("Failed to open main.vars file for writing");
+    return;
+  }
+  
+  // Create a JSON object with the new threshold value
+  StaticJsonDocument<64> doc;
+  doc[key] = value;
+  
+  // Serialize JSON to string
+  String jsonString;
+  serializeJson(doc, jsonString);
+  
+  // Write the JSON string to the file
+  configFile.println(jsonString);
+  
+  // Close the file
+  configFile.close();
 }
