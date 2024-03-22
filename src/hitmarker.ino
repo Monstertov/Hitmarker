@@ -17,6 +17,7 @@ unsigned long previousMillis = 0; // Variable to store the previous time when LE
 bool ledState = false; // Variable to track the state of the LED
 int PDV = 0; // Piezo Detection Value for web
 
+
 void setup() {
   Serial.begin(115200); // Start serial communication
   delay(1000); // Allow some time for the Serial monitor to initialize
@@ -99,6 +100,14 @@ void setup() {
     // Send JSON response
     server.send(200, "application/json", jsonString);
   });
+
+  // Route for sending command to serial
+    server.on("/send-command", HTTP_POST, []() {
+        String command = server.arg("plain");
+        Serial.println("Sending command " + command + " to serial port...");
+        Serial.println(command);
+        server.send(200, "application/json", "{\"success\": true, \"response\": \"Command sent to serial\"}");
+    });
 
   // Start server
   server.begin();

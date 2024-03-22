@@ -1,32 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Hitmarker</title>
-        <meta name="viewport" content="width=device-width">
-    </head>
-    <body>
+<head>
+    <title>Hitmarker</title>
+    <meta name="viewport" content="width=device-width">
+    <style>
+        .console {border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 20px;}
+        .output {min-height: 200px; padding: 5px; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 5px; overflow-y: scroll;}
+        .input {margin-top: 10px;}
+        .input input[type="text"] {width: calc(100% - 60px); padding: 5px; font-family: monospace; border: 1px solid #ccc; border-radius: 3px;}
+        .input button {padding: 5px 10px; background-color: #007bff; color: #fff; border: none; border-radius: 3px; cursor: pointer;}
+        .input button:hover {background-color: #0056b3;}
+    </style>
+</head>
+<body>
 
-        <h1>Piezo Detection Value</h1>
-        <h3>PDV: <span id="piezoValue">-</span></h3>
-        <h3>Threshold: <span id="vibrationThreshold">-</span></h3>
-    </body>
+<h1>Piezo Detection Value</h1>
+<h3>PDV: <span id="piezoValue">-</span></h3>
+<h3>Threshold: <span id="vibrationThreshold">-</span></h3>
 
-    <script>
-        
-        function fetchDataAndUpdate() {
-          
-          fetch('/data')
-            .then(response => response.json()) 
+<h1>Debug console</h1>
+<div class="console">
+    <div class="output" id="output"></div>
+    <div class="input">
+        <input type="text" id="input" placeholder="Type a command...">
+        <button onclick="send()">Send</button>
+    </div>
+</div>
+
+<script>
+    var webSocket = new WebSocket("ws://" + window.location.hostname + ":81");
+    webSocket.onmessage = function(event) {
+        document.getElementById("output").innerHTML += "<div>" + event.data + "</div>";
+    };
+
+    function fetchDataAndUpdate() {
+        fetch('/data')
+            .then(response => response.json())
             .then(data => {
-              
-              document.getElementById('piezoValue').innerText = data.piezoValue;
-              document.getElementById('vibrationThreshold').innerText = data.vibrationThreshold;
+                document.getElementById('piezoValue').innerText = data.piezoValue;
+                document.getElementById('vibrationThreshold').innerText = data.vibrationThreshold;
             })
             .catch(error => console.error('Error fetching data:', error));
-        }
-      
-        
-        setInterval(fetchDataAndUpdate, 100); 
-      </script>
+    }
 
+    setInterval(fetchDataAndUpdate, 100);
+
+    function send() {
+        var input = document.getElementById("input").value.trim();
+        if (input !== "") {
+            document.getElementById("output").innerHTML += "<div>> " + input + "</div>";
+            webSocket.send(input);
+            document.getElementById("input").value = "";
+        }
+    }
+
+    document.getElementById("input").addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            send();
+        }
+    });
+</script>
+
+</body>
 </html>
