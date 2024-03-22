@@ -8,7 +8,7 @@ const char *password = "hitmarker";  // WiFi network password
 const char *hostname = "hitmarker";  // Hostname for mDNS
 WebServer server(80);                // Create a web server on port 80
 
-const int piezoPin = 32;  // Use GPIO pin 25 for the piezo element
+const int piezoPin = 32;  // Use GPIO pin 32 for the piezo element
 const int ledPin = 14;    // Use GPIO pin 14 for the LED
 const int vibrationThreshold = 200;  // Adjust the threshold as needed
 const unsigned long ledDuration = 1000; // Duration for LED to stay on in milliseconds
