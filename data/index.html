@@ -28,11 +28,6 @@
 </div>
 
 <script>
-    var webSocket = new WebSocket("ws://" + window.location.hostname + ":81");
-    webSocket.onmessage = function(event) {
-        document.getElementById("output").innerHTML += "<div>" + event.data + "</div>";
-    };
-
     function fetchDataAndUpdate() {
         fetch('/data')
             .then(response => response.json())
@@ -49,9 +44,28 @@
         var input = document.getElementById("input").value.trim();
         if (input !== "") {
             document.getElementById("output").innerHTML += "<div>> " + input + "</div>";
-            webSocket.send(input);
+            execute(input);
             document.getElementById("input").value = "";
         }
+    }
+
+    function execute(command) {
+        fetch('/send-command', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ command: command })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("output").innerHTML += "<div>Response: " + data.response + "</div>";
+            } else {
+                document.getElementById("output").innerHTML += "<div>Error executing command</div>";
+            }
+        })
+        .catch(error => console.error('Error sending command:', error));
     }
 
     document.getElementById("input").addEventListener("keyup", function(event) {
