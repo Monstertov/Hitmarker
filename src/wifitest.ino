@@ -16,8 +16,6 @@ unsigned long previousMillis = 0; // Variable to store the previous time when LE
 bool ledState = false; // Variable to track the state of the LED
 
 
-//#define RESET_PIN 32 // GPIO pin connected to ESP32 reset pin
-
 void setup() {
   Serial.begin(115200); // Start serial communication
   delay(1000); // Allow some time for the Serial monitor to initialize
@@ -108,9 +106,6 @@ void loop() {
 }
 
 void powerCycle() {
-  //digitalWrite(RESET_PIN, LOW); // Pull reset pin low
-  //delay(100); // Wait for a brief moment
-  //digitalWrite(RESET_PIN, HIGH); // Release reset pin
   ESP.restart();
 }
 
