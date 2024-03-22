@@ -40,8 +40,7 @@ void setup() {
   IPAddress local_IP(192, 168, 1, 1);
   IPAddress gateway(192, 168, 1, 254);
   IPAddress subnet(255, 255, 255, 0);
-  IPAddress primaryDNS(192, 168, 1, 1);
-  WiFi.config(local_IP, gateway, subnet, primaryDNS);
+  WiFi.config(local_IP, gateway, subnet);
 
   // Start DHCP server
   if (!WiFi.softAP(ssid, password)) {
