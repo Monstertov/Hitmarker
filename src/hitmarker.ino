@@ -12,11 +12,11 @@ WebServer server(80);                // Create a web server on port 80
 const int piezoPin = 32;  // Use GPIO pin 32 for the piezo element
 const int ledPin = 14;    // Use GPIO pin 14 for the LED
 int vibrationThreshold = 150;  // Adjust the threshold as needed with default value
-const unsigned long ledDuration = 1000; // Duration for LED to stay on in milliseconds
+unsigned long triggerDuration = 500; // Duration for LED to stay on and trigger high in milliseconds
 unsigned long previousMillis = 0; // Variable to store the previous time when LED was turned on
 bool ledState = false; // Variable to track the state of the LED
 int PDV = 0; // Piezo Detection Value for web
-
+bool trigger = false; // Variable to store trigger state
 
 void setup() {
   Serial.begin(115200); // Start serial communication
@@ -45,6 +45,10 @@ void setup() {
       vibrationThreshold = doc["vibrationThreshold"];
       Serial.print("Loaded vibrationThreshold from main.vars: ");
       Serial.println(vibrationThreshold);
+
+      triggerDuration = doc["triggerDuration"];
+      Serial.print("Loaded triggerDuration from main.vars: ");
+      Serial.println(triggerDuration);
     }
     configFile.close();
   }
@@ -139,12 +143,14 @@ void loop() {
     digitalWrite(ledPin, HIGH);
     previousMillis = millis(); // Record the time when LED is turned on
     ledState = true; // Set the LED state to on
+    trigger = true; // Set trigger state high
   }
 
   // Check if it's time to turn off the LED
-  if (ledState && millis() - previousMillis >= ledDuration) {
+  if (ledState && millis() - previousMillis >= triggerDuration) {
     digitalWrite(ledPin, LOW); // Turn off the LED
     ledState = false; // Set the LED state to off
+    trigger = false; // Set trigger state low
   }
 
   // Handle Serial commands
@@ -184,17 +190,25 @@ void commander(String command){
     } else if (command.startsWith("ping")) {
       Serial.println("Pong!");
     } else if (command.startsWith("threshold")) {
-      // Extract the new threshold value from the command
-      int newThreshold = command.substring(10).toInt(); // Assuming the command format is "threshold <value>"
-      
+      // Extract the new threshold value from the command    
       // Update the vibrationThreshold variable
-      vibrationThreshold = newThreshold;
+      vibrationThreshold = command.substring(10).toInt(); // Assuming the command format is "threshold <value>"
       
       // Update the main.vars file
-      updateConfig("vibrationThreshold", String(newThreshold));
+      updateConfig("vibrationThreshold", String(vibrationThreshold));
       
       Serial.print("Updated vibrationThreshold to ");
-      Serial.println(newThreshold);
+      Serial.println(vibrationThreshold);
+      } else if (command.startsWith("trigger")) {
+      // Extract the new triggerDuration value from the command
+      // Update the vibrationThreshold variable
+      triggerDuration = command.substring(10).toInt(); // Assuming the command format is "trigger <value>";
+      
+      // Update the main.vars file
+      updateConfig("triggerDuration", String(triggerDuration));
+      
+      Serial.print("Updated triggerDuration to ");
+      Serial.println(triggerDuration);
     } else {
       Serial.print("Unknown command: ");
       Serial.println(command);
