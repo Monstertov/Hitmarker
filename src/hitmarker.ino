@@ -16,7 +16,7 @@ unsigned long triggerDuration = 500;  // Duration for LED to stay on and trigger
 unsigned long previousMillis = 0;     // Variable to store the previous time when LED was turned on
 bool ledState = false;                // Variable to track the state of the LED
 int PDV = 0;                          // Piezo Detection Value for web
-bool trigger = false;                 // Variable to store trigger state
+int triggerState = 0;                 // Variable to store trigger state
 
 void setup() {
   Serial.begin(115200); // Start serial communication
@@ -90,11 +90,11 @@ void setup() {
   // Route for data endpoint
   server.on("/data", HTTP_GET, []() {
     // Create a JSON object with live data
-    StaticJsonDocument<64> jsonData;
+    StaticJsonDocument<256> jsonData;
     jsonData["piezoValue"] = PDV;
+    jsonData["triggerState"] = triggerState;
     jsonData["vibrationThreshold"] = vibrationThreshold;
     jsonData["triggerDuration"] = triggerDuration;
-    jsonData['trigger'] = trigger;
 
     // Serialize JSON to string
     String jsonString;
@@ -144,14 +144,14 @@ void loop() {
     digitalWrite(ledPin, HIGH);
     previousMillis = millis(); // Record the time when LED is turned on
     ledState = true; // Set the LED state to on
-    trigger = true; // Set trigger state high
+    triggerState = 1; // Set trigger state high
   }
 
   // Check if it's time to turn off the LED
   if (ledState && millis() - previousMillis >= triggerDuration) {
     digitalWrite(ledPin, LOW); // Turn off the LED
     ledState = false; // Set the LED state to off
-    trigger = false; // Set trigger state low
+    triggerState = 0; // Set trigger state low
   }
 
   // Handle Serial commands
