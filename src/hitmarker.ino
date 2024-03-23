@@ -24,6 +24,12 @@ void setup() {
 
   Serial.println("Booting...");
 
+  // Initialize SPIFFS
+  if (!SPIFFS.begin(true)) {
+    Serial.println("An error occurred while mounting SPIFFS");
+    while (true); // Loop indefinitely if SPIFFS initialization fails
+  }
+
   // Read the main.vars file
   File configFile = SPIFFS.open("/main.vars", "r");
   if (!configFile) {
@@ -45,12 +51,6 @@ void setup() {
 
   pinMode(piezoPin, INPUT);  // Set the piezo pin as input
   pinMode(ledPin, OUTPUT);   // Set the LED pin as output
-
-  // Initialize SPIFFS
-  if (!SPIFFS.begin(true)) {
-    Serial.println("An error occurred while mounting SPIFFS");
-    while (true); // Loop indefinitely if SPIFFS initialization fails
-  }
 
   // Connect to WiFi network
   WiFi.softAP(ssid, password);
@@ -106,7 +106,7 @@ void setup() {
         DynamicJsonDocument jsonDocument(256);
         jsonDocument["command"].as<String>();
         DeserializationError error = deserializeJson(jsonDocument, command);
-        commander(jsonDocument["command"].as<String>(););
+        commander(jsonDocument["command"].as<String>());
         server.send(200, "application/json", "{\"success\": true, \"response\": \"Command sent to serial\"}");
     });
 
