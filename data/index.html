@@ -17,6 +17,7 @@
 <h1>Piezo Detection Value</h1>
 <h3>PDV: <span id="piezoValue">-</span></h3>
 <h3>Threshold: <span id="vibrationThreshold">-</span></h3>
+<h3>Trigger duration: <span id="triggerDuration">-</span></h3>
 
 <h1>Debug console</h1>
 <div class="console">
@@ -34,6 +35,7 @@
             .then(data => {
                 document.getElementById('piezoValue').innerText = data.piezoValue;
                 document.getElementById('vibrationThreshold').innerText = data.vibrationThreshold;
+                document.getElementById('triggerDuration').innerText = data.triggerDuration;
             })
             .catch(error => console.error('Error fetching data:', error));
     }
