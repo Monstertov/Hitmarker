@@ -45,7 +45,6 @@ void setup() {
       vibrationThreshold = doc["vibrationThreshold"];
       Serial.print("Loaded vibrationThreshold from main.vars: ");
       Serial.println(vibrationThreshold);
-
       triggerDuration = doc["triggerDuration"];
       Serial.print("Loaded triggerDuration from main.vars: ");
       Serial.println(triggerDuration);
@@ -117,8 +116,8 @@ void setup() {
   // Start server
   server.begin();
   Serial.println("HTTP server started");
-
-  Serial.println("Ready. You can send commands to ESP32 via Serial monitor.");
+  printAsciiArtToSerial();
+  Serial.println("Ready!");
 }
 
 void loop() {
@@ -236,4 +235,13 @@ void updateConfig(String key, String value) {
   
   // Close the file
   configFile.close();
+}
+
+void printAsciiArtToSerial() {
+  Serial.println("  _  ____________.---------.");
+  Serial.println("  \\`'  __________|_________|");
+  Serial.println(" /   (_)__]");
+  Serial.println("|    |");
+  Serial.println(".'   .'");
+  Serial.println("|____]");
 }
