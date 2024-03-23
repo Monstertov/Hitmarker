@@ -210,6 +210,8 @@ void commander(String command){
       
       Serial.print("Updated triggerDuration to ");
       Serial.println(triggerDuration);
+    } else if (command.startsWith("gun")) {
+      printAsciiArtToSerial();
     } else {
       Serial.print("Unknown command: ");
       Serial.println(command);
