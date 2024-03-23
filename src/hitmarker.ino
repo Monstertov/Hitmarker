@@ -103,10 +103,10 @@ void setup() {
     server.on("/send-command", HTTP_POST, []() {
         String command = server.arg("plain");
         Serial.println("Sending command " + command + " to serial port...");
-        Serial.println(command);
         DynamicJsonDocument jsonDocument(256);
-        String cmd = jsonDocument["command"].as<String>();
-        commander(cmd);
+        jsonDocument["command"].as<String>();
+        DeserializationError error = deserializeJson(jsonDocument, command);
+        commander(jsonDocument["command"].as<String>(););
         server.send(200, "application/json", "{\"success\": true, \"response\": \"Command sent to serial\"}");
     });
 
