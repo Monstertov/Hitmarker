@@ -203,7 +203,7 @@ void commander(String command){
       } else if (command.startsWith("trigger")) {
       // Extract the new triggerDuration value from the command
       // Update the vibrationThreshold variable
-      triggerDuration = command.substring(10).toInt(); // Assuming the command format is "trigger <value>";
+      triggerDuration = command.substring(8).toInt(); // Assuming the command format is "trigger <value>";
       
       // Update the main.vars file
       updateConfig("triggerDuration", String(triggerDuration));
