@@ -93,6 +93,8 @@ void setup() {
     StaticJsonDocument<64> jsonData;
     jsonData["piezoValue"] = PDV;
     jsonData["vibrationThreshold"] = vibrationThreshold;
+    jsonData["triggerDuration"] = triggerDuration;
+    jsonData['trigger'] = trigger;
 
     // Serialize JSON to string
     String jsonString;
