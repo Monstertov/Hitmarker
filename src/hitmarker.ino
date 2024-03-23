@@ -4,19 +4,19 @@
 #include <SPIFFS.h>
 #include <ArduinoJson.h>
 
-const char *ssid = "Hitmarker";      // WiFi network name
-const char *password = "hitmarker";  // WiFi network password
-const char *hostname = "hitmarker";  // Hostname for mDNS
-WebServer server(80);                // Create a web server on port 80
+const char *ssid = "Hitmarker";       // WiFi network name
+const char *password = "hitmarker";   // WiFi network password
+const char *hostname = "hitmarker";   // Hostname for mDNS
+WebServer server(80);                 // Create a web server on port 80
 
-const int piezoPin = 32;  // Use GPIO pin 32 for the piezo element
-const int ledPin = 14;    // Use GPIO pin 14 for the LED
-int vibrationThreshold = 150;  // Adjust the threshold as needed with default value
-unsigned long triggerDuration = 500; // Duration for LED to stay on and trigger high in milliseconds
-unsigned long previousMillis = 0; // Variable to store the previous time when LED was turned on
-bool ledState = false; // Variable to track the state of the LED
-int PDV = 0; // Piezo Detection Value for web
-bool trigger = false; // Variable to store trigger state
+const int piezoPin = 32;              // Use GPIO pin 32 for the piezo element
+const int ledPin = 14;                // Use GPIO pin 14 for the LED
+int vibrationThreshold = 150;         // Adjust the threshold as needed with default value
+unsigned long triggerDuration = 500;  // Duration for LED to stay on and trigger high in milliseconds
+unsigned long previousMillis = 0;     // Variable to store the previous time when LED was turned on
+bool ledState = false;                // Variable to track the state of the LED
+int PDV = 0;                          // Piezo Detection Value for web
+bool trigger = false;                 // Variable to store trigger state
 
 void setup() {
   Serial.begin(115200); // Start serial communication
