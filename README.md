@@ -67,7 +67,7 @@ The project utilizes a file named `main.vars` stored in the SPIFFS file system t
 ### TODO
 * Find best resistor for the piezo element. (For the best reaction time and output)
 * Fix bug on webinterface that sometimes keep flashing red background on hit.
-* Better/cooler webinterface
+* Better/cooler webinterface.
 
 ### Additional Notes
 
