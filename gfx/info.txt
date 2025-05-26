@@ -1,0 +1,14 @@
+
+Hope you enjoy your new logo, here are the people that
+made your beautiful logo happen :)
+font name: Decalotype-MediumItalic
+font link: https://hanken.co/product/decalotype/
+font author: Hanken Design Co.
+font author site: https://hanken.co/
+Slogan Font: Aleo-Light.otf
+
+icon designer: Looo
+icon designer link: /____Lo
+        
+{"bg":"#DDEBFB","icon-gradient-0":"#E90DDA","icon-gradient-1":"#15CFF1","font":"#262C4C","slogan":"#3a4060"}
+      
