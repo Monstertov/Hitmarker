@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="gfx/hitmarker.gif" alt="Hitmarker" />
+  <img src="gfx/hitmarker.gif" alt="Hitmarker" style="width:20%;" />
 </p>
 
 ## Hitmarker NodeMCU Project
