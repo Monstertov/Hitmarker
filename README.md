@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="gfx/hitmarker.gif" alt="Hitmarker" />
+</p>
+
 ## Hitmarker NodeMCU Project
 
 This project utilizes a NodeMCU board (ESP32) to create a device that detects vibrations using a piezo element, triggers an LED light, and provides a web interface for monitoring and configuration. It also allows for control and configuration through serial commands.
